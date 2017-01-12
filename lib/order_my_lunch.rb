@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'bundler/setup'
 require 'yaml'
-require 'pqueue'
 require_relative 'order_my_lunch/restaurant'
 require_relative 'order_my_lunch/sold_out'
 require_relative 'order_my_lunch/sold_out_option'
