@@ -1,0 +1,2 @@
+class SoldOut < StandardError
+end

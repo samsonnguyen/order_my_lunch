@@ -2,4 +2,6 @@
 source "https://rubygems.org"
 
 # gem "rails"
-gem 'pqueue'
+gem 'rake'
+gem 'rspec'
+gem 'factory_girl'
