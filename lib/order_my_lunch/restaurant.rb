@@ -10,7 +10,7 @@ class Restaurant
     @options                 = options
     @remaining               = @options[:max_capacity] || 0
     @remaining_items         = @options[:menu] || {}
-    @remaining_items[:other] = @remaining
+    @remaining_items[:other] = @remaining ## assumes that anyone without preference can also have the restricted options
   end
 
   def has?(option)

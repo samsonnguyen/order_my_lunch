@@ -20,22 +20,22 @@ RSpec.describe Restaurant do
       expect(restaurant.has? :gluten_free).to be_truthy
     end
 
-    it 'option runs out once placed' do
+    it 'raises an error when an option is sold out' do
       expect(restaurant.has? :gluten_free).to be_truthy
       1.times do
-        expect(restaurant.place_order_for :gluten_free).to be_truthy
+        restaurant.place_order_for :gluten_free
       end
       expect(restaurant.has? :gluten_free).to be_falsey
       expect { restaurant.place_order_for :gluten_free }.to raise_error(SoldOutOption)
     end
 
-    it 'options count toward max capacity' do
+    it 'raises an error when capacity is reached' do
       expect(restaurant.has? :gluten_free).to be_truthy
       1.times do
-        expect(restaurant.place_order_for :gluten_free).to be_truthy
+        restaurant.place_order_for :gluten_free
       end
       29.times do
-        expect(restaurant.place_order_for :other).to be_truthy
+        restaurant.place_order_for :other
       end
       expect(restaurant.has? :options).to be_falsey
       expect { restaurant.place_order_for :gluten_free }.to raise_error(SoldOut)

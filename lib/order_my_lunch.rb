@@ -6,18 +6,14 @@ require_relative 'order_my_lunch/sold_out'
 require_relative 'order_my_lunch/sold_out_option'
 
 class OrderMyLunch
-  attr_accessor :allow_alternatives
+  attr_accessor :allow_alternatives, :lunch_order
 
   def initialize(options = {})
-    @restaurant_list    = []
-    @allow_alternatives = options[:allow_alternatives]
-    @lunch_order        = []
-    load_restaurants(options[:restaurant_list])
-  end
+    @restaurant_list = []
+    @lunch_order     = []
 
-  def load_restaurants(config)
-    list = YAML.load_file(config)
-    list[:restaurants].each do |restaurant|
+    @allow_alternatives = options[:allow_alternatives]
+    options[:restaurant_list].each do |restaurant|
       @restaurant_list.push Restaurant.new(restaurant)
     end
     @restaurant_list.sort(&restaurants_by_rating)
@@ -30,15 +26,20 @@ class OrderMyLunch
   end
 
   def best_lunch_for(team)
-
     team[:details].each do |option, value|
       value.times do
-        @lunch_order << get_best_order_for(option, 0)
+        best_order = get_best_order_for(option, 0)
+        unless best_order.nil?
+          @lunch_order << best_order
+        end
       end
     end
     remaining = team[:total] - team[:details].values.inject(0) { |sum, x| sum + x }
     remaining.times do
-      @lunch_order << get_best_order_for(:other, 0)
+      best_order = get_best_order_for(:other, 0)
+      unless best_order.nil?
+        @lunch_order << best_order
+      end
     end
     self
   end
@@ -49,10 +50,14 @@ class OrderMyLunch
       if @restaurant_list[index]
         @restaurant_list[index].place_order_for(option, alternative)
       else
-        get_best_order_for(:other, 0, option) if @allow_alternatives ## We can't accomodate restrictions
+        if alternative.nil?
+          get_best_order_for(:other, 0, option) if @allow_alternatives ## We can't accomodate restrictions
+        else
+          return nil
+        end
       end
     rescue SoldOutOption, SoldOut
-      get_best_order_for(option, index+1)
+      get_best_order_for(option, index+1, alternative)
     end
   end
 
@@ -82,7 +87,8 @@ class OrderMyLunch
 
 end
 
-order_my_lunch = OrderMyLunch.new({:restaurant_list => "#{ File.join(File.dirname(__FILE__), '../config')}/restaurant_list.yml", :allow_alternatives => true})
+list           = YAML.load_file("#{ File.join(File.dirname(__FILE__), '../config')}/restaurant_list.yml")[:restaurants]
+order_my_lunch = OrderMyLunch.new({:restaurant_list => list, :allow_alternatives => true})
 final_order    = order_my_lunch.best_lunch_for(
     {:total   => 50,
      :details =>
@@ -90,3 +96,4 @@ final_order    = order_my_lunch.best_lunch_for(
           :gluten_free => 5}
     })
 puts final_order.list
+puts final_order.summary
