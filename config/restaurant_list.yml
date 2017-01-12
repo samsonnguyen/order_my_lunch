@@ -1,0 +1,20 @@
+---
+
+:restaurants:
+  - :name: Restaurant A
+    :rating: 3
+    :menu:
+      :vegetarian: 1
+      :gluten_free: 1
+      :nut_free: 10
+      :fish_free: 4
+    :max_capacity: 40
+  - :name: Restaurant B
+    :rating: 3
+    :menu:
+      :vegetarian: 0
+      :gluten_free: 0
+      :fish_free: 10
+      :nut_free: 10
+    :max_capacity: 40
+
