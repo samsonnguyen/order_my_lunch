@@ -7,3 +7,7 @@ begin
 rescue LoadError
 # ignored
 end
+
+task :run do
+  ruby "bin/order_my_lunch_runner.rb"
+end
