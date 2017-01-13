@@ -17,3 +17,11 @@
       :fish_free: 10
       :nut_free: 10
     :max_capacity: 40
+
+:team:
+  :total: 60
+  :details:
+    :vegetarian: 10
+    :gluten_free: 5
+
+:allow_alternatives: true

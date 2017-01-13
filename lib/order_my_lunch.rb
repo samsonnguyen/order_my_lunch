@@ -1,6 +1,4 @@
-#!/usr/bin/env ruby
 require 'bundler/setup'
-require 'yaml'
 require_relative 'order_my_lunch/restaurant'
 require_relative 'order_my_lunch/sold_out'
 require_relative 'order_my_lunch/sold_out_option'
@@ -64,9 +62,9 @@ class OrderMyLunch
   def summary
     summary = ''
     @lunch_order.group_by { |order| order.restaurant }.each do |restaurant, orders_by_restaurant|
-      summary << "#{restaurant.name}: Total of [#{orders_by_restaurant.size}] orders\n"
+      summary << "#{restaurant.name}: [#{orders_by_restaurant.size}] orders\n"
       orders_by_restaurant.group_by { |order| order.option }.each do |option, orders_by_option|
-        summary << "\t[#{orders_by_option.size}] #{option}\n"
+        summary << "\t- [#{orders_by_option.size}] #{option}\n"
       end
     end
 
@@ -86,14 +84,3 @@ class OrderMyLunch
   end
 
 end
-
-list           = YAML.load_file("#{ File.join(File.dirname(__FILE__), '../config')}/restaurant_list.yml")[:restaurants]
-order_my_lunch = OrderMyLunch.new({:restaurant_list => list, :allow_alternatives => true})
-final_order    = order_my_lunch.best_lunch_for(
-    {:total   => 50,
-     :details =>
-         {:vegetarian  => 10,
-          :gluten_free => 5}
-    })
-puts final_order.list
-puts final_order.summary
