@@ -28,12 +28,4 @@ class Restaurant
       raise SoldOutOption
     end
   end
-
-  def rating
-    @rating
-  end
-
-  def name
-    @name
-  end
 end
